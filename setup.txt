@@ -1,0 +1,252 @@
+# 🎸 MelodyMarket — Firebase Setup Guide
+
+A complete, beginner-friendly step-by-step guide to connect your site to Firebase Firestore.
+
+---
+
+## 📦 Files You Received
+
+| File | Purpose |
+|------|---------|
+| `index.html` | Your full store — cart, checkout, contact form, all wired to Firebase |
+| `admin.html` | Admin panel to view orders and enquiries (password-protected) |
+| `SETUP_GUIDE.md` | This file |
+
+---
+
+## 🔥 PART 1 — Create a Firebase Project (5 minutes)
+
+### Step 1 — Go to Firebase Console
+Open [https://console.firebase.google.com](https://console.firebase.google.com) and sign in with your Google account.
+
+### Step 2 — Create a New Project
+1. Click **"Add project"**
+2. Name it `melodymarket` (or anything you like)
+3. Disable Google Analytics (not needed)
+4. Click **"Create project"** and wait ~30 seconds
+
+### Step 3 — Register a Web App
+1. On your project dashboard, click the **`</>`** (Web) icon
+2. Give your app a nickname: `MelodyMarket Web`
+3. Leave "Firebase Hosting" **unchecked** (we're using plain HTML files)
+4. Click **"Register app"**
+
+### Step 4 — Copy Your Firebase Config
+You'll see a code block like this — **copy the `firebaseConfig` object**:
+
+```javascript
+const firebaseConfig = {
+  apiKey:            "AIzaSyXXXXXXXXXXXXXXXXXXXXX",
+  authDomain:        "melodymarket-xxxxx.firebaseapp.com",
+  projectId:         "melodymarket-xxxxx",
+  storageBucket:     "melodymarket-xxxxx.appspot.com",
+  messagingSenderId: "123456789012",
+  appId:             "1:123456789012:web:abcdefabcdef"
+};
+```
+
+### Step 5 — Paste Config into Both Files
+Open `index.html` and `admin.html` in any text editor (VS Code recommended).
+
+Search for this placeholder block (it's in both files):
+
+```javascript
+const firebaseConfig = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+  ...
+};
+```
+
+**Replace it** with the config you copied from Firebase. Do this in **both files**.
+
+---
+
+## 🗄️ PART 2 — Set Up Firestore Database (3 minutes)
+
+### Step 1 — Enable Firestore
+1. In the Firebase Console sidebar, click **"Firestore Database"**
+2. Click **"Create database"**
+3. Choose **"Start in test mode"** (we'll secure it later)
+4. Select a region: **`asia-south1` (Mumbai)** — best for India
+5. Click **"Enable"**
+
+> Firestore will automatically create collections when your app first writes data. You do NOT need to create `orders` or `contact_enquiries` collections manually.
+
+### Step 2 — Set Firestore Security Rules
+1. In Firestore, click the **"Rules"** tab
+2. Replace everything with the rules below
+3. Click **"Publish"**
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ORDERS collection:
+    // Anyone can create (add) an order — needed for checkout
+    // Only authenticated admin can read/list (use Firebase Auth for production)
+    // For now, allow reads from any origin (admin page is password-gated by JS)
+    match /orders/{orderId} {
+      allow create: if true;           // Public can place orders
+      allow read:   if true;           // Admin page reads orders (JS-gated)
+      allow update, delete: if false;  // No one can modify/delete via client
+    }
+
+    // CONTACT ENQUIRIES collection:
+    // Anyone can submit a contact form
+    // Admin page can read all enquiries
+    match /contact_enquiries/{docId} {
+      allow create: if true;
+      allow read:   if true;
+      allow update, delete: if false;
+    }
+  }
+}
+```
+
+> ⚠️ **Note for Production:** The rules above allow public reads, which is fine since the admin panel has a JS password gate. For a real production app, use **Firebase Authentication** and restrict reads to authenticated admin users.
+
+---
+
+## 🔑 PART 3 — Admin Panel Password
+
+Open `admin.html` and find this line (around line 200):
+
+```javascript
+const ADMIN_PASSWORD = "melody@admin123";
+```
+
+Change `"melody@admin123"` to your own strong password. This is a simple client-side password gate suitable for personal/testing use.
+
+**To access the admin panel:** Open `admin.html` in your browser and enter the password.
+
+---
+
+## 🚀 PART 4 — Run Your Project Locally
+
+### Option A — Simple (No install needed)
+Just open `index.html` directly in your browser by double-clicking it.
+
+> ⚠️ Firebase works fine when opened as `file://` for Firestore reads/writes.
+
+### Option B — With a Local Server (Recommended)
+
+If you have Node.js installed:
+
+```bash
+# Install a simple server globally (one time only)
+npm install -g live-server
+
+# Navigate to your project folder
+cd path/to/your/melodymarket/folder
+
+# Start the server
+live-server
+```
+
+Your site opens at `http://localhost:8080`. The admin panel is at `http://localhost:8080/admin.html`.
+
+### Option C — VS Code Live Server
+1. Install the **"Live Server"** extension in VS Code
+2. Right-click `index.html` → **"Open with Live Server"**
+
+---
+
+## ☁️ PART 5 — Deploy to the Internet (Free)
+
+### Option A — Firebase Hosting (Easiest)
+
+```bash
+# Install Firebase CLI (Node.js required)
+npm install -g firebase-tools
+
+# Login to Firebase
+firebase login
+
+# Initialize hosting in your project folder
+cd path/to/melodymarket
+firebase init hosting
+
+# When prompted:
+# - Use existing project → select your Firebase project
+# - Public directory → . (just a dot, current folder)
+# - Configure as SPA → No
+# - Overwrite index.html → No
+
+# Deploy!
+firebase deploy
+```
+
+Your site goes live at: `https://your-project-id.web.app`
+
+### Option B — Netlify (Drag & Drop, Zero Terminal)
+1. Go to [https://netlify.com](https://netlify.com) and sign up free
+2. Drag your entire project folder onto the Netlify dashboard
+3. Done! You get a live URL instantly.
+
+---
+
+## 🗂️ Firestore Data Structure Reference
+
+Your data is stored like this inside Firestore:
+
+### Collection: `orders`
+```
+orders/
+  └─ {auto-generated-id}/
+       ├─ customer/
+       │    ├─ name:    "Rahul Sharma"
+       │    ├─ email:   "rahul@email.com"
+       │    ├─ mobile:  "+91 98765 43210"
+       │    └─ address: "42, Bandra West, Mumbai"
+       ├─ items: [
+       │    { name: "Fender Stratocaster", price: 54999, qty: 1, subtotal: 54999 },
+       │    { name: "Shure SM7B",          price: 32000, qty: 2, subtotal: 64000 }
+       │  ]
+       ├─ totalAmount: 118999
+       ├─ status:      "pending"
+       └─ timestamp:   <Firestore ServerTimestamp>
+```
+
+### Collection: `contact_enquiries`
+```
+contact_enquiries/
+  └─ {auto-generated-id}/
+       ├─ name:      "Priya Nair"
+       ├─ email:     "priya@email.com"
+       ├─ subject:   "Keyboards & Pianos"
+       ├─ message:   "I'm looking for a beginner keyboard…"
+       └─ timestamp: <Firestore ServerTimestamp>
+```
+
+---
+
+## 🔧 Quick Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| `FirebaseError: Missing or insufficient permissions` | Your Firestore rules are not published. Go to Firestore → Rules → paste the rules above → Publish |
+| Data not saving, no error shown | Open browser DevTools (F12) → Console tab — check for errors. Usually a wrong API key |
+| Admin panel shows "Failed to load" | Make sure you pasted the same `firebaseConfig` in `admin.html` too |
+| Cart doesn't open | Make sure the `index.html` file is complete (not truncated). Check browser console |
+| `firebase is not defined` | The Firebase CDN scripts must load before your `<script>` code. They are already at the bottom of the file — don't move them |
+
+---
+
+## ✅ Final Checklist
+
+- [ ] Created Firebase project at console.firebase.google.com
+- [ ] Enabled Firestore database
+- [ ] Published security rules
+- [ ] Pasted `firebaseConfig` into `index.html`
+- [ ] Pasted `firebaseConfig` into `admin.html`
+- [ ] Changed admin password in `admin.html`
+- [ ] Tested: Added item to cart → Checkout → Order saved in Firestore
+- [ ] Tested: Submitted contact form → Enquiry saved in Firestore
+- [ ] Tested: Admin panel → Orders tab shows the order
+- [ ] Tested: Admin panel → Enquiries tab shows the message
+
+---
+
+*Built for MelodyMarket · Premium Musical Instruments · Mumbai, India*

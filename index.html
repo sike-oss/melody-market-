@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MelodyMarket — Premium Musical Instruments</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--red:#C0392B;--red-deep:#96281B;--red-bright:#E74C3C;--red-glow:rgba(192,57,43,0.25);--black:#0A0A0A;--black2:#111111;--black3:#181818;--black4:#222222;--white:#FFFFFF;--off-white:#F5F5F5;--grey:#888888;--grey-light:#DDDDDD;--font-display:'Bebas Neue',sans-serif;--font-serif:'Cormorant Garamond',serif;--font-body:'DM Sans',sans-serif}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--black);color:var(--white);overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--black)}::-webkit-scrollbar-thumb{background:var(--red);border-radius:4px}
+img{display:block;width:100%;height:100%;object-fit:cover}
+
+/* CURSOR */
+.cursor-dot{width:8px;height:8px;background:var(--red);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(192,57,43,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .15s ease}
+
+/* NAVBAR */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;padding:22px 6%;display:flex;align-items:center;justify-content:space-between;transition:all .4s ease}
+#navbar.scrolled{background:rgba(10,10,10,.97);backdrop-filter:blur(20px);padding:14px 6%;border-bottom:1px solid rgba(192,57,43,.2)}
+.nav-logo{font-family:var(--font-display);font-size:1.9rem;letter-spacing:2px;color:var(--white);text-decoration:none;line-height:1}
+.nav-logo span{color:var(--red)}
+.nav-logo sub{display:block;font-family:var(--font-body);font-size:.42rem;letter-spacing:4px;color:var(--grey);font-weight:500;text-transform:uppercase;margin-top:-2px}
+.nav-links{display:flex;gap:38px;list-style:none}
+.nav-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.78rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;position:relative;transition:color .3s}
+.nav-links a::before{content:'';position:absolute;bottom:-5px;left:0;width:0;height:1px;background:var(--red);transition:width .35s ease}
+.nav-links a:hover{color:var(--white)}.nav-links a:hover::before{width:100%}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:40px;height:40px;background:none;border:1px solid rgba(255,255,255,.1);border-radius:50%;color:rgba(255,255,255,.7);font-size:.9rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
+.nav-icon-btn:hover{border-color:var(--red);color:var(--red)}
+.nav-cart-btn{display:flex;align-items:center;gap:10px;background:var(--red);color:var(--white);border:none;padding:10px 22px;font-family:var(--font-body);font-size:.78rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;clip-path:polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%)}
+.nav-cart-btn:hover{background:var(--red-bright)}
+.cart-badge{background:var(--white);color:var(--red);font-size:.65rem;font-weight:800;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:1.5px;background:var(--white);display:block;transition:all .3s}
+
+/* MOBILE MENU */
+.mob-menu{position:fixed;inset:0;background:var(--black2);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px;transform:translateX(100%);transition:transform .5s cubic-bezier(.77,0,.175,1)}
+.mob-menu.open{transform:translateX(0)}
+.mob-menu a{font-family:var(--font-display);font-size:3.2rem;letter-spacing:3px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .3s}
+.mob-menu a:hover{color:var(--red)}
+.mob-close{position:absolute;top:24px;right:6%;background:none;border:none;color:rgba(255,255,255,.6);font-size:1.4rem;cursor:pointer;transition:color .3s}
+.mob-close:hover{color:var(--red)}
+
+/* SEARCH */
+.search-overlay{position:fixed;inset:0;background:rgba(5,5,5,.96);z-index:8888;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s}
+.search-overlay.open{opacity:1;pointer-events:all}
+.search-wrap{width:90%;max-width:640px}
+.search-label{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.search-input-row{display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,.15)}
+.search-wrap input{flex:1;background:none;border:none;padding:16px 0;font-family:var(--font-serif);font-size:2rem;color:var(--white);outline:none}
+.search-wrap input::placeholder{color:rgba(255,255,255,.2)}
+.s-close{background:none;border:none;color:rgba(255,255,255,.4);font-size:1.2rem;cursor:pointer;padding:8px;transition:color .3s}
+.s-close:hover{color:var(--red)}
+
+/* HERO */
+#home{min-height:100vh;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.hero-img{position:absolute;inset:0}
+.hero-img img{object-position:center top;filter:brightness(.4) saturate(.8)}
+.hero-gradient{position:absolute;inset:0;background:linear-gradient(105deg,rgba(10,10,10,.97) 0%,rgba(10,10,10,.75) 45%,rgba(10,10,10,.2) 100%)}
+.hero-streak{position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(to bottom,transparent,var(--red),transparent);opacity:.6}
+.hero-content{position:relative;z-index:2;padding:0 6% 100px;max-width:800px;animation:heroIn 1.1s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes heroIn{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+.hero-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.eyebrow-line{width:48px;height:1px;background:var(--red)}
+.eyebrow-text{font-size:.72rem;letter-spacing:4px;text-transform:uppercase;color:var(--red);font-weight:600}
+.hero-title{font-family:var(--font-display);font-size:clamp(4.5rem,10vw,8.5rem);line-height:.92;letter-spacing:2px;color:var(--white);margin-bottom:32px}
+.hero-title em{font-style:normal;color:var(--red)}
+.hero-title .outline{-webkit-text-stroke:1px rgba(255,255,255,.35);color:transparent}
+.hero-desc{font-family:var(--font-serif);font-size:1.2rem;color:rgba(255,255,255,.55);line-height:1.8;max-width:520px;margin-bottom:44px}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.btn-primary{display:inline-flex;align-items:center;gap:12px;background:var(--red);color:var(--white);border:none;padding:16px 36px;font-family:var(--font-body);font-size:.82rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all .3s;clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)}
+.btn-primary:hover{background:var(--red-bright);transform:translateY(-2px);box-shadow:0 12px 40px var(--red-glow)}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);padding:15px 32px;font-family:var(--font-body);font-size:.82rem;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all .3s}
+.btn-ghost:hover{border-color:var(--red);color:var(--white)}
+.hero-stats{position:absolute;right:6%;bottom:100px;display:flex;flex-direction:column;gap:32px;z-index:2;animation:heroIn 1.3s cubic-bezier(.22,1,.36,1) forwards}
+.hero-stat{text-align:right}
+.hero-stat-num{font-family:var(--font-display);font-size:3rem;letter-spacing:2px;line-height:1;color:var(--white)}
+.hero-stat-num span{color:var(--red)}
+.hero-stat-label{font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:4px}
+.scroll-line{position:absolute;bottom:0;left:6%;display:flex;flex-direction:column;align-items:center;gap:10px;padding-bottom:40px;z-index:2}
+.scroll-line span{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);writing-mode:vertical-rl}
+.scroll-line::after{content:'';width:1px;height:60px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:scrollPulse 2s infinite}
+@keyframes scrollPulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* TICKER */
+.ticker{background:var(--red);padding:14px 0;overflow:hidden}
+.ticker-track{display:flex;animation:tickerMove 30s linear infinite;white-space:nowrap}
+.ticker-item{display:inline-flex;align-items:center;gap:20px;padding:0 40px;font-family:var(--font-display);font-size:.95rem;letter-spacing:3px;color:rgba(255,255,255,.9)}
+.ticker-item i{font-size:.75rem;opacity:.6}
+@keyframes tickerMove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION BASE */
+section{padding:110px 6%}
+.s-eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.s-eyebrow-line{width:32px;height:1px;background:var(--red)}
+.s-eyebrow-text{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);font-weight:600}
+.s-title{font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4rem);letter-spacing:1px;line-height:1;color:var(--white);margin-bottom:14px}
+.s-sub{font-family:var(--font-serif);font-size:1.05rem;color:rgba(255,255,255,.4);max-width:480px;line-height:1.7}
+.row-between{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:56px}
+.link-arrow{display:inline-flex;align-items:center;gap:8px;color:var(--red);text-decoration:none;font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;transition:gap .3s;white-space:nowrap;padding-bottom:20px}
+.link-arrow:hover{gap:14px}
+
+/* CATEGORIES */
+#shop{background:var(--black2)}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.cat-tile{position:relative;aspect-ratio:2/3;overflow:hidden;cursor:pointer}
+.cat-tile img{transition:transform .7s cubic-bezier(.25,.46,.45,.94),filter .5s;filter:brightness(.45) saturate(.7)}
+.cat-tile:hover img{transform:scale(1.07);filter:brightness(.3) saturate(.5)}
+.cat-tile-info{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:32px 28px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,transparent 60%)}
+.cat-num{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:8px;font-weight:600}
+.cat-name{font-family:var(--font-display);font-size:1.8rem;letter-spacing:1px;color:var(--white);margin-bottom:16px}
+.cat-shop-btn{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:var(--white);padding:8px 18px;font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;opacity:0;transform:translateY(12px);transition:all .35s;width:fit-content}
+.cat-tile:hover .cat-shop-btn{opacity:1;transform:translateY(0)}
+
+/* PRODUCTS */
+#instruments{background:var(--black)}
+.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.prod-card{background:var(--black2);border:1px solid rgba(255,255,255,.05);transition:all .35s ease;position:relative;cursor:pointer}
+.prod-card:hover{border-color:rgba(192,57,43,.4);transform:translateY(-5px);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(192,57,43,.15)}
+.prod-img{aspect-ratio:1;overflow:hidden;position:relative;background:var(--black3)}
+.prod-img img{transition:transform .6s ease,filter .4s;filter:brightness(.85)}
+.prod-card:hover .prod-img img{transform:scale(1.06);filter:brightness(.95)}
+.prod-badge{position:absolute;top:14px;left:14px;background:var(--red);color:var(--white);font-size:.62rem;font-weight:700;padding:4px 10px;letter-spacing:1.5px;text-transform:uppercase;z-index:2}
+.prod-badge.hot{background:#E67E22}.prod-badge.sale{background:var(--red-deep)}
+.prod-wish{position:absolute;top:12px;right:12px;width:36px;height:36px;background:rgba(10,10,10,.7);border:1px solid rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:.85rem;cursor:pointer;opacity:0;transition:all .3s;z-index:2;backdrop-filter:blur(8px)}
+.prod-card:hover .prod-wish{opacity:1}
+.prod-wish:hover,.prod-wish.active{background:var(--red);color:var(--white);border-color:var(--red);opacity:1}
+.prod-info{padding:20px}
+.prod-brand{font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);font-weight:600;margin-bottom:7px}
+.prod-name{font-family:var(--font-serif);font-size:1.05rem;font-weight:600;color:var(--white);line-height:1.35;margin-bottom:10px}
+.prod-stars{display:flex;align-items:center;gap:3px;margin-bottom:14px}
+.prod-stars i{font-size:.65rem;color:var(--red)}
+.prod-stars i.empty{color:rgba(255,255,255,.15)}
+.prod-stars span{font-size:.7rem;color:var(--grey);margin-left:5px}
+.prod-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.prod-price{font-family:var(--font-display);font-size:1.5rem;letter-spacing:.5px;color:var(--white);line-height:1}
+.prod-price-old{font-size:.8rem;color:rgba(255,255,255,.3);text-decoration:line-through;display:block;margin-top:2px}
+.add-btn{background:transparent;border:1px solid rgba(192,57,43,.5);color:var(--red);padding:9px 16px;font-family:var(--font-body);font-size:.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap}
+.add-btn:hover,.add-btn.added{background:var(--red);color:var(--white);border-color:var(--red)}
+
+/* PROMO */
+.promo-section{background:var(--black2);padding:0 6% 110px}
+.promo-wrap{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;min-height:520px}
+.promo-img-side{position:relative}
+.promo-img-side img{filter:brightness(.6) saturate(.8)}
+.promo-img-side::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,var(--black3) 100%)}
+.promo-content-side{background:var(--black3);padding:72px 60px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.promo-content-side::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--red)}
+.promo-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);color:var(--red);padding:6px 16px;font-size:.7rem;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;margin-bottom:24px;width:fit-content}
+.promo-title{font-family:var(--font-display);font-size:clamp(2.5rem,4vw,3.5rem);letter-spacing:1px;line-height:1.05;color:var(--white);margin-bottom:20px}
+.promo-title span{color:var(--red)}
+.promo-text{font-family:var(--font-serif);font-size:1.05rem;color:rgba(255,255,255,.45);line-height:1.8;margin-bottom:36px}
+.promo-feats{display:flex;gap:32px;margin-top:36px}
+.promo-feat i{color:var(--red);font-size:1.1rem;margin-bottom:8px;display:block}
+.promo-feat-label{font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.3)}
+.promo-feat-val{font-family:var(--font-display);font-size:1.6rem;letter-spacing:1px;color:var(--white)}
+
+/* ABOUT */
+#about{background:var(--black3)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;margin-top:60px}
+.about-img-wrap{position:relative}
+.about-img-main{width:100%;aspect-ratio:4/5;overflow:hidden;position:relative;z-index:1}
+.about-img-main img{filter:brightness(.7) saturate(.8)}
+.about-img-wrap::before{content:'';position:absolute;top:-20px;left:-20px;width:60%;height:40%;border:2px solid rgba(192,57,43,.3);z-index:0}
+.about-img-wrap::after{content:'';position:absolute;bottom:-20px;right:-20px;width:40%;height:50%;border:2px solid rgba(192,57,43,.15);z-index:0}
+.about-badge{position:absolute;bottom:-24px;left:-24px;background:var(--red);padding:24px 28px;z-index:2}
+.about-badge-num{font-family:var(--font-display);font-size:3rem;letter-spacing:2px;line-height:1;color:var(--white)}
+.about-badge-label{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:4px}
+.feats-list{display:flex;flex-direction:column}
+.feat-row{display:flex;align-items:flex-start;gap:20px;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:all .3s}
+.feat-row:first-child{border-top:1px solid rgba(255,255,255,.06)}
+.feat-icon-box{width:46px;height:46px;border:1px solid rgba(192,57,43,.4);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:1rem;flex-shrink:0;transition:all .3s}
+.feat-row:hover .feat-icon-box{background:var(--red);border-color:var(--red);color:var(--white)}
+.feat-row-title{font-weight:600;font-size:.9rem;color:var(--white);margin-bottom:4px}
+.feat-row-desc{font-size:.82rem;color:rgba(255,255,255,.4);line-height:1.6;font-weight:300}
+
+/* REVIEWS */
+.reviews-section{background:var(--black);padding:110px 6%}
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:56px}
+.rev-card{background:var(--black2);padding:40px 36px;position:relative;transition:background .3s;border-top:3px solid transparent}
+.rev-card:hover{background:var(--black3);border-top-color:var(--red)}
+.rev-quote{font-family:var(--font-display);font-size:5rem;color:var(--red);opacity:.2;line-height:.7;margin-bottom:20px}
+.rev-text{font-family:var(--font-serif);font-size:1.05rem;color:rgba(255,255,255,.6);line-height:1.8;margin-bottom:28px}
+.rev-stars{display:flex;gap:4px;margin-bottom:24px}
+.rev-stars i{color:var(--red);font-size:.75rem}
+.rev-author{display:flex;align-items:center;gap:14px}
+.rev-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid rgba(192,57,43,.3)}
+.rev-name{font-weight:600;font-size:.88rem;color:var(--white);margin-bottom:2px}
+.rev-role{font-size:.72rem;color:rgba(255,255,255,.35)}
+
+/* FAQ */
+#faq{background:var(--black2)}
+.faq-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:100px;margin-top:60px;align-items:start}
+.faq-side-img{position:relative;aspect-ratio:3/4;overflow:hidden}
+.faq-side-img img{filter:brightness(.5) saturate(.7)}
+.faq-side-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,.8),transparent 50%)}
+.faq-item{border-bottom:1px solid rgba(255,255,255,.07)}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:22px 0;color:rgba(255,255,255,.8);font-family:var(--font-body);font-size:.95rem;font-weight:500;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;transition:color .3s}
+.faq-q:hover,.faq-q.open{color:var(--white)}
+.faq-icon-wrap{width:28px;height:28px;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);font-size:.65rem;transition:all .3s;flex-shrink:0}
+.faq-q.open .faq-icon-wrap{background:var(--red);border-color:var(--red);color:var(--white);transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s}
+.faq-a.open{max-height:200px;padding-bottom:20px}
+.faq-a p{font-family:var(--font-serif);font-size:.95rem;color:rgba(255,255,255,.4);line-height:1.9}
+
+/* CONTACT */
+#contact{background:var(--black3)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;margin-top:60px}
+.contact-detail{display:flex;align-items:flex-start;gap:18px;margin-top:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.06)}
+.contact-detail:last-of-type{border-bottom:none}
+.c-icon{width:44px;height:44px;border:1px solid rgba(192,57,43,.4);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:.9rem;flex-shrink:0}
+.c-label{font-size:.67rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:5px}
+.c-value{font-size:.92rem;font-weight:500;color:var(--white)}
+.contact-form{display:flex;flex-direction:column;gap:16px}
+.form-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:7px}
+.form-lbl{font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:500}
+.form-ctrl{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);padding:13px 16px;color:var(--white);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .3s}
+.form-ctrl::placeholder{color:rgba(255,255,255,.2)}
+.form-ctrl:focus{border-color:rgba(192,57,43,.6)}
+select.form-ctrl option{background:var(--black2)}
+textarea.form-ctrl{min-height:120px;resize:vertical}
+
+/* NEWSLETTER */
+.newsletter{background:var(--red);padding:80px 6%;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.nl-title{font-family:var(--font-display);font-size:clamp(2.5rem,4vw,3.5rem);letter-spacing:1px;color:var(--white);margin-bottom:10px}
+.nl-sub{font-family:var(--font-serif);font-size:1.05rem;color:rgba(255,255,255,.65)}
+.nl-form{display:flex;flex-direction:column;gap:12px}
+.nl-input-row{display:flex}
+.nl-input{flex:1;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.25);border-right:none;padding:15px 20px;color:var(--white);font-family:var(--font-body);font-size:.9rem;outline:none}
+.nl-input::placeholder{color:rgba(255,255,255,.4)}
+.nl-btn{background:var(--black);color:var(--white);border:none;padding:15px 28px;font-family:var(--font-body);font-size:.78rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .3s;white-space:nowrap}
+.nl-btn:hover{background:#1a1a1a}
+.nl-note{font-size:.72rem;color:rgba(255,255,255,.5)}
+
+/* FOOTER */
+footer{background:var(--black);padding:80px 6% 32px}
+.footer-grid{display:grid;grid-template-columns:1.8fr 1fr 1fr 1fr;gap:48px;padding-bottom:60px;border-bottom:1px solid rgba(255,255,255,.05)}
+.footer-about p{font-family:var(--font-serif);font-size:.95rem;color:rgba(255,255,255,.35);line-height:1.8;margin:18px 0 28px;max-width:300px}
+.socials{display:flex;gap:10px}
+.soc-btn{width:38px;height:38px;border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);text-decoration:none;font-size:.85rem;transition:all .3s}
+.soc-btn:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+.footer-col h5{font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul li a{color:rgba(255,255,255,.3);text-decoration:none;font-size:.88rem;font-weight:300;transition:color .3s}
+.footer-col ul li a:hover{color:var(--red)}
+.footer-bottom{padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-bottom p{font-size:.78rem;color:rgba(255,255,255,.2)}
+.pay-row{display:flex;gap:8px;align-items:center}
+.pay-chip{border:1px solid rgba(255,255,255,.1);padding:5px 12px;font-size:.65rem;letter-spacing:1px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase}
+
+/* TOAST */
+.toast{position:fixed;bottom:32px;right:32px;background:var(--black2);border-left:3px solid var(--red);padding:16px 22px;font-size:.85rem;font-weight:500;color:var(--white);z-index:99999;transform:translateX(120%);transition:transform .4s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;gap:12px;min-width:260px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.toast.show{transform:translateX(0)}
+.toast i{color:var(--red)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+[data-delay="1"]{transition-delay:.1s}[data-delay="2"]{transition-delay:.2s}[data-delay="3"]{transition-delay:.3s}[data-delay="4"]{transition-delay:.4s}
+
+/* =====================================================
+   CART DRAWER — NEW
+   ===================================================== */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:8000;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(4px)}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--black2);z-index:8001;transform:translateX(100%);transition:transform .45s cubic-bezier(.77,0,.175,1);display:flex;flex-direction:column;border-left:1px solid rgba(192,57,43,.2)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:28px 28px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cart-drawer-head h3{font-family:var(--font-display);font-size:1.6rem;letter-spacing:2px;color:var(--white)}
+.cart-close-btn{width:38px;height:38px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.6);font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;border-radius:50%}
+.cart-close-btn:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+.cart-items-wrap{flex:1;overflow-y:auto;padding:20px 28px}
+.cart-items-wrap::-webkit-scrollbar{width:3px}
+.cart-items-wrap::-webkit-scrollbar-thumb{background:var(--red)}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:rgba(255,255,255,.25)}
+.cart-empty i{font-size:3.5rem;color:rgba(192,57,43,.3)}
+.cart-empty p{font-size:.88rem;letter-spacing:1px}
+.cart-item{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.cart-item-img{width:68px;height:68px;background:var(--black3);flex-shrink:0;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+.cart-item-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.85)}
+.cart-item-info{flex:1}
+.cart-item-name{font-size:.88rem;font-weight:600;color:var(--white);margin-bottom:4px;line-height:1.3}
+.cart-item-price{font-family:var(--font-display);font-size:1.1rem;letter-spacing:.5px;color:var(--red)}
+.cart-item-controls{display:flex;align-items:center;gap:10px;margin-top:8px}
+.qty-btn{width:26px;height:26px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.qty-btn:hover{background:var(--red);border-color:var(--red)}
+.qty-num{font-size:.88rem;font-weight:600;min-width:24px;text-align:center}
+.cart-item-remove{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.25);font-size:.8rem;cursor:pointer;padding:4px 8px;transition:color .3s}
+.cart-item-remove:hover{color:var(--red)}
+.cart-drawer-foot{padding:20px 28px 28px;border-top:1px solid rgba(255,255,255,.06)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cart-total-label{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.cart-total-amount{font-family:var(--font-display);font-size:2rem;letter-spacing:1px;color:var(--white)}
+.cart-total-amount span{color:var(--red);font-size:1.1rem}
+.checkout-btn{width:100%;padding:16px;background:var(--red);color:var(--white);border:none;font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:12px}
+.checkout-btn:hover{background:var(--red-bright);box-shadow:0 8px 30px var(--red-glow)}
+.checkout-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* =====================================================
+   CHECKOUT MODAL — NEW
+   ===================================================== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--black2);border:1px solid rgba(192,57,43,.25);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(30px);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.modal-overlay.open .modal-box{transform:translateY(0)}
+.modal-box::-webkit-scrollbar{width:3px}
+.modal-box::-webkit-scrollbar-thumb{background:var(--red)}
+.modal-head{padding:32px 36px 24px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-family:var(--font-display);font-size:1.8rem;letter-spacing:2px;color:var(--white)}
+.modal-head p{font-size:.78rem;color:rgba(255,255,255,.3);margin-top:4px}
+.modal-close{position:absolute;top:20px;right:20px;width:34px;height:34px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;border-radius:50%}
+.modal-close:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+.modal-body{padding:28px 36px}
+.modal-order-summary{background:var(--black3);padding:16px;margin-bottom:24px;border-left:3px solid var(--red)}
+.modal-order-summary h4{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:10px}
+.modal-order-item{display:flex;justify-content:space-between;font-size:.85rem;color:rgba(255,255,255,.7);padding:4px 0}
+.modal-order-total{display:flex;justify-content:space-between;padding-top:10px;margin-top:8px;border-top:1px solid rgba(255,255,255,.08);font-weight:700;color:var(--white);font-size:.92rem}
+.modal-order-total span:last-child{color:var(--red);font-family:var(--font-display);font-size:1.1rem}
+.modal-form{display:flex;flex-direction:column;gap:14px}
+.modal-submit{margin-top:8px;width:100%;padding:16px;background:var(--red);color:var(--white);border:none;font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px}
+.modal-submit:hover{background:var(--red-bright)}
+.modal-submit:disabled{opacity:.5;cursor:not-allowed}
+
+/* SUCCESS ANIMATION */
+.order-success{text-align:center;padding:40px 36px}
+.order-success-icon{width:80px;height:80px;background:rgba(39,174,96,.15);border:2px solid #27ae60;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#27ae60;margin:0 auto 24px;animation:popIn .5s cubic-bezier(.22,1,.36,1)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.order-success h3{font-family:var(--font-display);font-size:2rem;color:var(--white);margin-bottom:10px}
+.order-success p{color:rgba(255,255,255,.45);font-size:.9rem;line-height:1.7}
+.order-success .order-id{display:inline-block;background:var(--black3);border:1px solid rgba(192,57,43,.3);color:var(--red);padding:6px 16px;font-size:.75rem;letter-spacing:2px;margin:16px 0}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.prod-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1024px){
+  .cat-grid{grid-template-columns:repeat(2,1fr)}.prod-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr;gap:60px}.about-img-wrap{max-width:500px}
+  .promo-wrap{grid-template-columns:1fr}.promo-img-side{display:none}
+  .faq-layout{grid-template-columns:1fr}.faq-side-img{display:none}
+  .contact-grid{grid-template-columns:1fr;gap:48px}.newsletter{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:repeat(2,1fr)}.hero-stats{display:none}
+}
+@media(max-width:768px){
+  .nav-links{display:none}.hamburger{display:flex}section{padding:80px 5%}
+  .prod-grid{grid-template-columns:repeat(2,1fr)}.reviews-grid{grid-template-columns:1fr}
+  .promo-content-side{padding:48px 32px}.form-row2{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .cart-drawer{width:100vw}
+  .modal-head,.modal-body{padding-left:24px;padding-right:24px}
+}
+@media(max-width:500px){.cat-grid{grid-template-columns:1fr}.prod-grid{grid-template-columns:1fr}.hero-title{font-size:3.8rem}}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- SEARCH -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-wrap">
+    <p class="search-label"><i class="fa fa-search"></i>&nbsp; Search Instruments</p>
+    <div class="search-input-row">
+      <input type="text" placeholder="e.g. Fender Stratocaster, Pearl Drum Kit…" id="searchInput">
+      <button class="s-close" onclick="toggleSearch()"><i class="fa fa-times"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="toggleMenu()"><i class="fa fa-times"></i></button>
+  <a href="#home" onclick="toggleMenu()">Home</a>
+  <a href="#shop" onclick="toggleMenu()">Shop</a>
+  <a href="#instruments" onclick="toggleMenu()">Instruments</a>
+  <a href="#about" onclick="toggleMenu()">About</a>
+  <a href="#faq" onclick="toggleMenu()">FAQ</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">Melody<span>Market</span><sub>Premium Instruments</sub></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#instruments">Instruments</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button>
+    <button class="nav-icon-btn"><i class="fa fa-user"></i></button>
+    <!-- Cart button now opens the cart drawer -->
+    <button class="nav-cart-btn" onclick="openCartDrawer()">
+      <i class="fa fa-shopping-cart"></i>
+      <span>Cart</span>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+    <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- =====================================================
+     CART DRAWER (NEW)
+     ===================================================== -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCartDrawer()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close-btn" onclick="closeCartDrawer()"><i class="fa fa-times"></i></button>
+  </div>
+  <div class="cart-items-wrap" id="cartItemsWrap">
+    <!-- Items injected by JS -->
+  </div>
+  <div class="cart-drawer-foot">
+    <div class="cart-total-row">
+      <div>
+        <div class="cart-total-label">Total Amount</div>
+      </div>
+      <div class="cart-total-amount"><span>₹</span><span id="cartTotalAmt">0</span></div>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>
+      <i class="fa fa-lock"></i> Proceed to Checkout
+    </button>
+  </div>
+</div>
+
+<!-- =====================================================
+     CHECKOUT MODAL (NEW)
+     ===================================================== -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-box" id="checkoutBox">
+    <!-- Content injected by JS (form or success screen) -->
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1600&q=80" alt="Concert stage">
+  </div>
+  <div class="hero-gradient"></div>
+  <div class="hero-streak"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Est. 2009 &nbsp;·&nbsp; Premium Music Store</span>
+    </div>
+    <h1 class="hero-title">FIND YOUR<br><em>PERFECT</em><br><span class="outline">SOUND</span></h1>
+    <p class="hero-desc">Discover premium musical instruments for beginners, professionals, and world-class recording studios. Every legend started somewhere.</p>
+    <div class="hero-cta">
+      <a href="#shop" class="btn-primary"><i class="fa fa-store"></i> Shop Now</a>
+      <a href="#instruments" class="btn-ghost"><i class="fa fa-play-circle"></i> Explore Collection</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">500<span>+</span></div><div class="hero-stat-label">Instruments</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">12K<span>+</span></div><div class="hero-stat-label">Musicians</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">50<span>+</span></div><div class="hero-stat-label">Top Brands</div></div>
+  </div>
+  <div class="scroll-line"><span>Scroll</span></div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><i class="fa fa-guitar"></i> Electric Guitars</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Studio Drum Kits</span>
+    <span class="ticker-item"><i class="fa fa-music"></i> Digital Pianos</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Orchestral Strings</span>
+    <span class="ticker-item"><i class="fa fa-microphone"></i> Pro Microphones</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Bass Guitars</span>
+    <span class="ticker-item"><i class="fa fa-headphones"></i> Studio Monitors</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Wind Instruments</span>
+    <span class="ticker-item"><i class="fa fa-guitar"></i> Electric Guitars</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Studio Drum Kits</span>
+    <span class="ticker-item"><i class="fa fa-music"></i> Digital Pianos</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Orchestral Strings</span>
+    <span class="ticker-item"><i class="fa fa-microphone"></i> Pro Microphones</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Bass Guitars</span>
+    <span class="ticker-item"><i class="fa fa-headphones"></i> Studio Monitors</span>
+    <span class="ticker-item"><i class="fa fa-circle" style="font-size:.4rem"></i> Wind Instruments</span>
+  </div>
+</div>
+
+<!-- SHOP / CATEGORIES -->
+<section id="shop">
+  <div class="row-between">
+    <div>
+      <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Browse</span></div>
+      <h2 class="s-title">Shop by Category</h2>
+      <p class="s-sub">Curated collections for every musician.</p>
+    </div>
+    <a href="#instruments" class="link-arrow">View All &nbsp;<i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-tile reveal" data-delay="1">
+      <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&q=80" alt="Guitars">
+      <div class="cat-tile-info">
+        <div class="cat-num">142 Products</div>
+        <div class="cat-name">Guitars</div>
+        <a href="#instruments" class="cat-shop-btn"><i class="fa fa-arrow-right"></i> Shop Category</a>
+      </div>
+    </div>
+    <div class="cat-tile reveal" data-delay="2">
+      <img src="https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=600&q=80" alt="Drums">
+      <div class="cat-tile-info">
+        <div class="cat-num">67 Products</div>
+        <div class="cat-name">Drums</div>
+        <a href="#instruments" class="cat-shop-btn"><i class="fa fa-arrow-right"></i> Shop Category</a>
+      </div>
+    </div>
+    <div class="cat-tile reveal" data-delay="3">
+      <img src="https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=600&q=80" alt="Keyboards">
+      <div class="cat-tile-info">
+        <div class="cat-num">89 Products</div>
+        <div class="cat-name">Keyboards</div>
+        <a href="#instruments" class="cat-shop-btn"><i class="fa fa-arrow-right"></i> Shop Category</a>
+      </div>
+    </div>
+    <div class="cat-tile reveal" data-delay="4">
+      <img src="https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=600&q=80" alt="Orchestral">
+      <div class="cat-tile-info">
+        <div class="cat-num">54 Products</div>
+        <div class="cat-name">Orchestral</div>
+        <a href="#instruments" class="cat-shop-btn"><i class="fa fa-arrow-right"></i> Shop Category</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEW ARRIVALS — data-price attributes added for cart system -->
+<section id="instruments">
+  <div class="row-between">
+    <div>
+      <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Just In</span></div>
+      <h2 class="s-title">New Arrivals</h2>
+      <p class="s-sub">Freshest instruments in our premium collection.</p>
+    </div>
+    <a href="#shop" class="link-arrow">View All &nbsp;<i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="prod-grid">
+    <div class="prod-card reveal" data-delay="1">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=500&q=80" alt="Fender Stratocaster">
+        <span class="prod-badge">New</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Fender</div>
+        <div class="prod-name">American Stratocaster Electric Guitar</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(128)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹54,999</div><div class="prod-price-old">₹62,000</div></div>
+          <!-- data-name and data-price used by cart JS -->
+          <button class="add-btn" data-name="Fender American Stratocaster" data-price="54999" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="2">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=500&q=80" alt="Acoustic Guitar">
+        <span class="prod-badge sale">Sale</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Gibson</div>
+        <div class="prod-name">J-45 Standard Acoustic Guitar</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(94)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹89,000</div><div class="prod-price-old">₹1,10,000</div></div>
+          <button class="add-btn" data-name="Gibson J-45 Acoustic Guitar" data-price="89000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="3">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1543443258-92b04ad5ec6b?w=500&q=80" alt="Drum Kit">
+        <span class="prod-badge hot">Hot</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Pearl</div>
+        <div class="prod-name">Export EXX Studio Drum Kit</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(210)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹72,000</div><div class="prod-price-old">₹88,000</div></div>
+          <button class="add-btn" data-name="Pearl Export EXX Drum Kit" data-price="72000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="4">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1525201548942-d8732f6617a0?w=500&q=80" alt="Digital Piano">
+        <span class="prod-badge">New</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Roland</div>
+        <div class="prod-name">FP-90X Digital Grand Piano</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(306)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹1,45,000</div><div class="prod-price-old">₹1,72,000</div></div>
+          <button class="add-btn" data-name="Roland FP-90X Digital Piano" data-price="145000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="1">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="Violin">
+        <span class="prod-badge sale">Sale</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Yamaha</div>
+        <div class="prod-name">YVN Model 5 Professional Violin</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star empty"></i><span>(72)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹38,500</div><div class="prod-price-old">₹48,000</div></div>
+          <button class="add-btn" data-name="Yamaha YVN Violin" data-price="38500" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="2">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1583795484071-3c453e3a7c71?w=500&q=80" alt="Saxophone">
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Selmer</div>
+        <div class="prod-name">Series II Alto Saxophone</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(149)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹1,25,000</div><div class="prod-price-old">₹1,50,000</div></div>
+          <button class="add-btn" data-name="Selmer Series II Alto Saxophone" data-price="125000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="3">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=500&q=80" alt="Bass Guitar">
+        <span class="prod-badge hot">Hot</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Fender</div>
+        <div class="prod-name">Precision Bass American Pro II</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><span>(88)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹68,000</div><div class="prod-price-old">₹78,000</div></div>
+          <button class="add-btn" data-name="Fender Precision Bass Pro II" data-price="68000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="prod-card reveal" data-delay="4">
+      <div class="prod-img">
+        <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=500&q=80" alt="Microphone">
+        <span class="prod-badge">New</span>
+        <button class="prod-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+      </div>
+      <div class="prod-info">
+        <div class="prod-brand">Shure</div>
+        <div class="prod-name">SM7B Broadcast Vocal Microphone</div>
+        <div class="prod-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><span>(512)</span></div>
+        <div class="prod-bottom">
+          <div><div class="prod-price">₹32,000</div><div class="prod-price-old">₹38,000</div></div>
+          <button class="add-btn" data-name="Shure SM7B Microphone" data-price="32000" onclick="addCart(this)"><i class="fa fa-cart-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROMO BANNER -->
+<div class="promo-section reveal">
+  <div class="promo-wrap">
+    <div class="promo-img-side">
+      <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=80" alt="Studio session">
+    </div>
+    <div class="promo-content-side">
+      <span class="promo-tag"><i class="fa fa-certificate"></i>&nbsp; Limited Edition</span>
+      <h2 class="promo-title">Premium <span>Studio</span><br>Instruments</h2>
+      <p class="promo-text">Upgrade your sound with professional-grade equipment trusted by Grammy-winning artists. Built for those who refuse to compromise on tone.</p>
+      <a href="#instruments" class="btn-primary"><i class="fa fa-arrow-right"></i>&nbsp; Explore Collection</a>
+      <div class="promo-feats">
+        <div class="promo-feat"><i class="fa fa-shield-alt"></i><div class="promo-feat-val">2 Yr</div><div class="promo-feat-label">Warranty</div></div>
+        <div class="promo-feat"><i class="fa fa-shipping-fast"></i><div class="promo-feat-val">Free</div><div class="promo-feat-label">Shipping</div></div>
+        <div class="promo-feat"><i class="fa fa-undo"></i><div class="promo-feat-val">30 Day</div><div class="promo-feat-label">Returns</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Why Choose Us</span></div>
+  <h2 class="s-title">The MelodyMarket<br>Difference</h2>
+  <div class="about-grid">
+    <div class="about-img-wrap reveal" data-delay="1">
+      <div class="about-img-main">
+        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop" alt="Music store">
+      </div>
+      <div class="about-badge"><div class="about-badge-num">15+</div><div class="about-badge-label">Years Experience</div></div>
+    </div>
+    <div class="about-text reveal" data-delay="2">
+      <p class="s-sub" style="margin-bottom:40px">Trusted by over 12,000 musicians worldwide — from bedroom beginners to Grammy-winning professionals.</p>
+      <div class="feats-list">
+        <div class="feat-row"><div class="feat-icon-box"><i class="fa fa-medal"></i></div><div><div class="feat-row-title">Handpicked Quality</div><div class="feat-row-desc">Every instrument is personally tested by our professional musicians. Zero compromise.</div></div></div>
+        <div class="feat-row"><div class="feat-icon-box"><i class="fa fa-globe-asia"></i></div><div><div class="feat-row-title">Worldwide Shipping</div><div class="feat-row-desc">Fast, insured delivery to 120+ countries with specialized foam packaging.</div></div></div>
+        <div class="feat-row"><div class="feat-icon-box"><i class="fa fa-lock"></i></div><div><div class="feat-row-title">Secure Payments</div><div class="feat-row-desc">Bank-grade 256-bit SSL encryption. UPI, card, PayPal, and EMI options.</div></div></div>
+        <div class="feat-row"><div class="feat-icon-box"><i class="fa fa-headset"></i></div><div><div class="feat-row-title">Expert Support 7 Days</div><div class="feat-row-desc">Professional musicians available every day to help you find your perfect instrument.</div></div></div>
+        <div class="feat-row"><div class="feat-icon-box"><i class="fa fa-undo-alt"></i></div><div><div class="feat-row-title">30-Day Returns</div><div class="feat-row-desc">Full refund within 30 days, no questions asked. Your satisfaction guaranteed.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<div class="reviews-section">
+  <div class="row-between">
+    <div>
+      <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Testimonials</span></div>
+      <h2 class="s-title">What Musicians Say</h2>
+    </div>
+    <a href="#contact" class="link-arrow">Write a Review &nbsp;<i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="reviews-grid">
+    <div class="rev-card reveal" data-delay="1">
+      <div class="rev-quote">"</div>
+      <div class="rev-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+      <p class="rev-text">The Fender Stratocaster arrived perfectly set up and ready to play. The tone is absolutely incredible. MelodyMarket is now my only stop for premium instruments.</p>
+      <div class="rev-author">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Rahul"></div>
+        <div><div class="rev-name">Rahul Sharma</div><div class="rev-role">Professional Guitarist · Mumbai</div></div>
+      </div>
+    </div>
+    <div class="rev-card reveal" data-delay="2">
+      <div class="rev-quote">"</div>
+      <div class="rev-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+      <p class="rev-text">I ordered 12 keyboards for my music academy. Bulk pricing was very reasonable, delivery on time, and every unit worked flawlessly. Absolutely recommended!</p>
+      <div class="rev-author">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Priya"></div>
+        <div><div class="rev-name">Priya Nair</div><div class="rev-role">Music Academy Director · Bangalore</div></div>
+      </div>
+    </div>
+    <div class="rev-card reveal" data-delay="3">
+      <div class="rev-quote">"</div>
+      <div class="rev-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+      <p class="rev-text">Got the Pearl drum kit for my recording studio. The packing was exceptional — zero damage. Customer support guided me through every step. Outstanding service.</p>
+      <div class="rev-author">
+        <div class="rev-avatar"><img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&q=80" alt="Arjun"></div>
+        <div><div class="rev-name">Arjun Mehta</div><div class="rev-role">Session Drummer · Delhi</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Questions</span></div>
+  <h2 class="s-title">Frequently Asked</h2>
+  <div class="faq-layout">
+    <div class="faq-side-img reveal">
+      <img src="https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=600&q=80" alt="Guitar in store">
+    </div>
+    <div class="faq-list reveal" data-delay="2">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do you ship instruments internationally?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>Yes — we ship to 120+ countries worldwide. International orders are fully insured and packaged with specialized foam padding. Delivery typically takes 7–14 business days depending on the destination.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Are all instruments brand new and authentic?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>Absolutely. Every instrument is 100% authentic, brand new, and sourced directly from official brand distributors. Each comes with the original manufacturer's warranty card and full documentation.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What is your return and refund policy?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>We offer a hassle-free 30-day return policy. If you're unsatisfied for any reason, return the instrument in original condition for a full refund. Contact our support team within 30 days of delivery.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I get expert advice before purchasing?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>Of course! Our professional musician consultants are available 7 days a week via contact form, live chat, or phone. Describe your skill level and music style — we'll find the perfect match for you.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What payment methods are accepted?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>All major credit/debit cards, UPI (GPay, PhonePe, Paytm), net banking, PayPal, and EMI for orders above ₹5,000. Secured with 256-bit SSL encryption.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do instruments come professionally set up?<span class="faq-icon-wrap"><i class="fa fa-plus"></i></span></button><div class="faq-a"><p>For guitars and basses above ₹25,000, we offer complimentary professional setup — action adjustment, intonation, and fresh strings. You receive a stage-ready instrument, free of charge.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT — IDs added to form fields for Firebase -->
+<section id="contact">
+  <div class="s-eyebrow"><div class="s-eyebrow-line"></div><span class="s-eyebrow-text">Get in Touch</span></div>
+  <h2 class="s-title">Contact Us</h2>
+  <div class="contact-grid">
+    <div class="reveal" data-delay="1">
+      <p class="s-sub" style="margin-bottom:8px">Have a question? Our team responds within 24 hours.</p>
+      <div class="contact-detail"><div class="c-icon"><i class="fa fa-envelope"></i></div><div><div class="c-label">Email Us</div><div class="c-value">hello@melodymarket.in</div></div></div>
+      <div class="contact-detail"><div class="c-icon"><i class="fa fa-phone"></i></div><div><div class="c-label">Call Us</div><div class="c-value">+91 98765 43210</div></div></div>
+      <div class="contact-detail"><div class="c-icon"><i class="fa fa-map-marker-alt"></i></div><div><div class="c-label">Visit Us</div><div class="c-value">42, Music Lane, Bandra West, Mumbai 400050</div></div></div>
+      <div class="contact-detail"><div class="c-icon"><i class="fa fa-clock"></i></div><div><div class="c-label">Store Hours</div><div class="c-value">Mon – Sat: 10 AM – 7 PM IST</div></div></div>
+    </div>
+    <div class="reveal" data-delay="2">
+      <div class="contact-form">
+        <div class="form-row2">
+          <!-- IDs added so JS can read the values -->
+          <div class="form-group"><label class="form-lbl">First Name</label><input class="form-ctrl" id="cfFirstName" type="text" placeholder="Rahul"></div>
+          <div class="form-group"><label class="form-lbl">Last Name</label><input class="form-ctrl" id="cfLastName" type="text" placeholder="Sharma"></div>
+        </div>
+        <div class="form-group"><label class="form-lbl">Email Address</label><input class="form-ctrl" id="cfEmail" type="email" placeholder="rahul@email.com"></div>
+        <div class="form-group"><label class="form-lbl">I'm Interested In</label>
+          <select class="form-ctrl" id="cfSubject">
+            <option>Electric Guitars</option><option>Acoustic Guitars</option><option>Drums &amp; Percussion</option>
+            <option>Keyboards &amp; Pianos</option><option>Orchestral Strings</option><option>Wind Instruments</option><option>Studio Equipment</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-lbl">Message</label><textarea class="form-ctrl" id="cfMessage" placeholder="Tell us what you're looking for…"></textarea></div>
+        <button class="btn-primary" id="contactSubmitBtn" onclick="submitContactForm(this)" style="align-self:flex-start"><i class="fa fa-paper-plane"></i>&nbsp; Send Message</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div>
+    <div class="s-eyebrow"><div class="s-eyebrow-line" style="background:rgba(255,255,255,.4)"></div><span class="s-eyebrow-text" style="color:rgba(255,255,255,.7)">Newsletter</span></div>
+    <h2 class="nl-title">Join Our Music<br>Community</h2>
+    <p class="nl-sub">New arrivals, exclusive deals &amp; music tips. No spam, ever.</p>
+  </div>
+  <div>
+    <div class="nl-form">
+      <div class="nl-input-row">
+        <input class="nl-input" type="email" placeholder="Your email address…" id="nlEmail">
+        <button class="nl-btn" onclick="subscribe()"><i class="fa fa-arrow-right"></i>&nbsp; Subscribe</button>
+      </div>
+      <p class="nl-note"><i class="fa fa-lock"></i>&nbsp; We respect your privacy. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-about">
+      <a href="#home" class="nav-logo" style="font-size:1.6rem">Melody<span>Market</span></a>
+      <p>Premium musical instruments for every musician — from first-timers to world-class performers. Your journey to the perfect sound starts here.</p>
+      <div class="socials">
+        <a href="#" class="soc-btn"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="soc-btn"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="soc-btn"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="soc-btn"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="soc-btn"><i class="fab fa-spotify"></i></a>
+      </div>
+    </div>
+    <div class="footer-col"><h5>Company</h5><ul><li><a href="#about">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Press &amp; Media</a></li><li><a href="#">Blog</a></li></ul></div>
+    <div class="footer-col"><h5>Shop</h5><ul><li><a href="#instruments">Guitars</a></li><li><a href="#instruments">Drums</a></li><li><a href="#instruments">Keyboards</a></li><li><a href="#instruments">Accessories</a></li></ul></div>
+    <div class="footer-col"><h5>Support</h5><ul><li><a href="#faq">FAQ</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">Returns</a></li><li><a href="#contact">Contact Us</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 MelodyMarket. All rights reserved. &nbsp;·&nbsp; <a href="#" style="color:var(--red)">Privacy Policy</a> &nbsp;·&nbsp; <a href="#" style="color:var(--red)">Terms</a></p>
+    <div class="pay-row"><span class="pay-chip">UPI</span><span class="pay-chip">VISA</span><span class="pay-chip">MC</span><span class="pay-chip">AMEX</span><span class="pay-chip">PayPal</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><i class="fa fa-check-circle"></i><span id="toastMsg">Done!</span></div>
+
+<!-- =====================================================
+     FIREBASE SDK (v9 compat mode — easiest for beginners)
+     ===================================================== -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+/* =====================================================================
+   STEP 1 — PASTE YOUR FIREBASE CONFIG BELOW
+   Go to https://console.firebase.google.com → Your Project
+   → Project Settings → Your Apps → Web App → Copy firebaseConfig
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDmh2GkhiCM3eyEEoywpf4vYMu70xIYjFQ",
+  authDomain: "melodymarket-da44d.firebaseapp.com",
+  projectId: "melodymarket-da44d",
+  storageBucket: "melodymarket-da44d.firebasestorage.app",
+  messagingSenderId: "965597053349",
+  appId: "1:965597053349:web:46de22927c5c799b21684c",
+  measurementId: "G-7Z3LMXH03E"
+};
+
+// Initialize Firebase App
+firebase.initializeApp(firebaseConfig);
+
+// Get Firestore database reference
+const db = firebase.firestore();
+
+/* =====================================================================
+   CURSOR
+   ===================================================================== */
+const dot  = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  dot.style.left  = e.clientX + 'px';
+  dot.style.top   = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.prod-card,.cat-tile').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    ring.style.transform   = 'translate(-50%,-50%) scale(1.8)';
+    ring.style.borderColor = 'var(--red)';
+  });
+  el.addEventListener('mouseleave', () => {
+    ring.style.transform   = 'translate(-50%,-50%) scale(1)';
+    ring.style.borderColor = 'rgba(192,57,43,.5)';
+  });
+});
+
+/* =====================================================================
+   NAVBAR SCROLL
+   ===================================================================== */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', scrollY > 60));
+
+/* =====================================================================
+   MOBILE MENU & SEARCH
+   ===================================================================== */
+function toggleMenu() {
+  document.getElementById('mobMenu').classList.toggle('open');
+}
+function toggleSearch() {
+  const o = document.getElementById('searchOverlay');
+  o.classList.toggle('open');
+  if (o.classList.contains('open')) document.getElementById('searchInput').focus();
+}
+document.getElementById('searchOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) toggleSearch();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('searchOverlay').classList.remove('open');
+    closeCartDrawer();
+    closeCheckout();
+  }
+});
+
+/* =====================================================================
+   TOAST NOTIFICATION
+   ===================================================================== */
+function showToast(msg, type = 'success') {
+  const t   = document.getElementById('toast');
+  const ico = t.querySelector('i');
+  document.getElementById('toastMsg').textContent = msg;
+  // Change icon colour for errors
+  ico.className = type === 'error' ? 'fa fa-exclamation-circle' : 'fa fa-check-circle';
+  t.style.borderLeftColor = type === 'error' ? '#e74c3c' : 'var(--red)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3400);
+}
+
+/* =====================================================================
+   CART STATE
+   ===================================================================== */
+// cartItems is an array of { name, price (Number), qty } objects
+let cartItems = [];
+
+/**
+ * Returns the numeric price from a data-price attribute string.
+ * e.g. "54999" → 54999
+ */
+function parsePrice(str) {
+  return parseInt(str.replace(/[^\d]/g, ''), 10) || 0;
+}
+
+/**
+ * Formats a number as Indian currency string e.g. 54999 → "54,999"
+ */
+function formatINR(num) {
+  return num.toLocaleString('en-IN');
+}
+
+/* =====================================================================
+   ADD TO CART
+   ===================================================================== */
+function addCart(btn) {
+  const name  = btn.getAttribute('data-name');
+  const price = parsePrice(btn.getAttribute('data-price'));
+
+  // Check if item already exists → increase qty
+  const existing = cartItems.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cartItems.push({ name, price, qty: 1 });
+  }
+
+  // Animate the button briefly
+  btn.classList.add('added');
+  btn.innerHTML = '<i class="fa fa-check"></i> Added';
+  setTimeout(() => {
+    btn.classList.remove('added');
+    btn.innerHTML = '<i class="fa fa-cart-plus"></i> Add';
+  }, 2200);
+
+  updateCartUI();
+  showToast(`"${name}" added to cart`);
+}
+
+/* =====================================================================
+   UPDATE CART BADGE + DRAWER CONTENTS
+   ===================================================================== */
+function updateCartUI() {
+  // Total quantity (sum of all qtys)
+  const totalQty = cartItems.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cartBadge').textContent = totalQty;
+
+  // Total price
+  const totalAmt = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+  document.getElementById('cartTotalAmt').textContent = formatINR(totalAmt);
+
+  // Enable / disable checkout button
+  document.getElementById('checkoutBtn').disabled = cartItems.length === 0;
+
+  // Render cart items
+  const wrap = document.getElementById('cartItemsWrap');
+  if (cartItems.length === 0) {
+    wrap.innerHTML = `
+      <div class="cart-empty">
+        <i class="fa fa-guitar"></i>
+        <p>Your cart is empty</p>
+        <p style="font-size:.75rem">Add some instruments to get started!</p>
+      </div>`;
+    return;
+  }
+
+  wrap.innerHTML = cartItems.map((item, idx) => `
+    <div class="cart-item">
+      <div class="cart-item-img">
+        <img src="https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=200&q=60" alt="${item.name}" style="filter:brightness(.7)">
+      </div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">₹${formatINR(item.price)}</div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQty(${idx}, -1)"><i class="fa fa-minus"></i></button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${idx}, +1)"><i class="fa fa-plus"></i></button>
+          <button class="cart-item-remove" onclick="removeCartItem(${idx})"><i class="fa fa-trash"></i></button>
+        </div>
+      </div>
+      <div style="font-family:var(--font-display);font-size:.95rem;color:rgba(255,255,255,.6);white-space:nowrap">
+        ₹${formatINR(item.price * item.qty)}
+      </div>
+    </div>`).join('');
+}
+
+/* =====================================================================
+   QUANTITY CHANGE & REMOVE
+   ===================================================================== */
+function changeQty(idx, delta) {
+  cartItems[idx].qty += delta;
+  if (cartItems[idx].qty <= 0) cartItems.splice(idx, 1);
+  updateCartUI();
+}
+function removeCartItem(idx) {
+  cartItems.splice(idx, 1);
+  updateCartUI();
+  showToast('Item removed from cart');
+}
+
+/* =====================================================================
+   CART DRAWER OPEN / CLOSE
+   ===================================================================== */
+function openCartDrawer() {
+  updateCartUI(); // make sure content is fresh
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCartDrawer() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* =====================================================================
+   CHECKOUT MODAL — OPEN WITH FORM
+   ===================================================================== */
+function openCheckout() {
+  if (cartItems.length === 0) return;
+
+  const totalAmt = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+
+  // Build order summary HTML
+  const summaryRows = cartItems.map(i =>
+    `<div class="modal-order-item">
+       <span>${i.name} × ${i.qty}</span>
+       <span>₹${formatINR(i.price * i.qty)}</span>
+     </div>`).join('');
+
+  document.getElementById('checkoutBox').innerHTML = `
+    <div class="modal-head">
+      <div>
+        <h3>Checkout</h3>
+        <p>Fill in your delivery details below</p>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeCheckout()"><i class="fa fa-times"></i></button>
+    <div class="modal-body">
+      <!-- Order Summary -->
+      <div class="modal-order-summary">
+        <h4>Order Summary</h4>
+        ${summaryRows}
+        <div class="modal-order-total">
+          <span>Total</span>
+          <span>₹${formatINR(totalAmt)}</span>
+        </div>
+      </div>
+      <!-- Customer Details Form -->
+      <div class="modal-form">
+        <div class="form-group">
+          <label class="form-lbl">Full Name *</label>
+          <input class="form-ctrl" id="coName" type="text" placeholder="Rahul Sharma">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Email Address *</label>
+          <input class="form-ctrl" id="coEmail" type="email" placeholder="rahul@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Mobile Number *</label>
+          <input class="form-ctrl" id="coMobile" type="tel" placeholder="+91 98765 43210">
+        </div>
+        <div class="form-group">
+          <label class="form-lbl">Delivery Address *</label>
+          <textarea class="form-ctrl" id="coAddress" placeholder="Flat No, Street, City, State, PIN"></textarea>
+        </div>
+        <button class="modal-submit" id="placeOrderBtn" onclick="placeOrder()">
+          <i class="fa fa-check-circle"></i> Confirm &amp; Place Order
+        </button>
+      </div>
+    </div>`;
+
+  document.getElementById('checkoutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckout() {
+  document.getElementById('checkoutModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* =====================================================================
+   PLACE ORDER — SAVE TO FIRESTORE `orders` COLLECTION
+   ===================================================================== */
+async function placeOrder() {
+  // Read form values
+  const name    = document.getElementById('coName').value.trim();
+  const email   = document.getElementById('coEmail').value.trim();
+  const mobile  = document.getElementById('coMobile').value.trim();
+  const address = document.getElementById('coAddress').value.trim();
+
+  // Basic validation
+  if (!name || !email || !mobile || !address) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+  if (!email.includes('@')) {
+    showToast('Please enter a valid email address.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('placeOrderBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Placing Order…';
+
+  const totalAmt = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
+
+  // Build the order object to save in Firestore
+  const orderData = {
+    customer: {
+      name,
+      email,
+      mobile,
+      address
+    },
+    items: cartItems.map(i => ({
+      name:     i.name,
+      price:    i.price,
+      qty:      i.qty,
+      subtotal: i.price * i.qty
+    })),
+    totalAmount: totalAmt,
+    status:      'pending',
+    timestamp:   firebase.firestore.FieldValue.serverTimestamp() // Server-side time
+  };
+
+  try {
+    // Save to Firestore — it auto-generates a unique document ID
+    const docRef = await db.collection('orders').add(orderData);
+
+    // Show success screen
+    document.getElementById('checkoutBox').innerHTML = `
+      <div class="order-success">
+        <div class="order-success-icon"><i class="fa fa-check"></i></div>
+        <h3>Order Placed!</h3>
+        <div class="order-id">Order ID: ${docRef.id.substring(0,8).toUpperCase()}</div>
+        <p>Thank you, ${name}! Your order of <strong>₹${formatINR(totalAmt)}</strong> has been confirmed.<br>
+        We'll contact you on <strong>${mobile}</strong> within 24 hours with shipping details.</p>
+        <br>
+        <button class="btn-primary" style="margin:0 auto" onclick="closeCheckout()">
+          <i class="fa fa-arrow-left"></i> Continue Shopping
+        </button>
+      </div>`;
+
+    // Clear the cart after successful order
+    cartItems = [];
+    updateCartUI();
+    closeCartDrawer(); // Also close the drawer
+
+  } catch (err) {
+    console.error('Firestore error:', err);
+    showToast('Failed to place order. Please try again.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa fa-check-circle"></i> Confirm & Place Order';
+  }
+}
+
+/* =====================================================================
+   CONTACT FORM — SAVE TO FIRESTORE `contact_enquiries` COLLECTION
+   ===================================================================== */
+async function submitContactForm(btn) {
+  // Read values from the contact form fields
+  const firstName = document.getElementById('cfFirstName').value.trim();
+  const lastName  = document.getElementById('cfLastName').value.trim();
+  const email     = document.getElementById('cfEmail').value.trim();
+  const subject   = document.getElementById('cfSubject').value;
+  const message   = document.getElementById('cfMessage').value.trim();
+
+  // Validation
+  if (!firstName || !email || !message) {
+    showToast('Please fill in at least Name, Email, and Message.', 'error');
+    return;
+  }
+  if (!email.includes('@')) {
+    showToast('Please enter a valid email address.', 'error');
+    return;
+  }
+
+  // Show loading state
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>&nbsp; Sending…';
+
+  const enquiryData = {
+    name:      `${firstName} ${lastName}`.trim(),
+    email,
+    subject,   // The instrument category they selected
+    message,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    // Save to Firestore `contact_enquiries` collection
+    await db.collection('contact_enquiries').add(enquiryData);
+
+    // Success UI feedback
+    btn.innerHTML = '<i class="fa fa-check"></i>&nbsp; Sent!';
+    btn.style.background = '#27ae60';
+    showToast("Message sent! We'll reply within 24 hours.");
+
+    // Clear the form
+    document.getElementById('cfFirstName').value = '';
+    document.getElementById('cfLastName').value  = '';
+    document.getElementById('cfEmail').value     = '';
+    document.getElementById('cfMessage').value   = '';
+
+    // Reset button after 3 seconds
+    setTimeout(() => {
+      btn.innerHTML        = '<i class="fa fa-paper-plane"></i>&nbsp; Send Message';
+      btn.style.background = '';
+      btn.disabled         = false;
+    }, 3000);
+
+  } catch (err) {
+    console.error('Firestore error:', err);
+    showToast('Failed to send message. Please try again.', 'error');
+    btn.innerHTML = '<i class="fa fa-paper-plane"></i>&nbsp; Send Message';
+    btn.style.background = '';
+    btn.disabled = false;
+  }
+}
+
+/* =====================================================================
+   WISHLIST TOGGLE
+   ===================================================================== */
+function toggleWish(btn) {
+  btn.classList.toggle('active');
+  showToast(btn.classList.contains('active') ? 'Added to wishlist' : 'Removed from wishlist');
+}
+
+/* =====================================================================
+   FAQ ACCORDION
+   ===================================================================== */
+function toggleFaq(btn) {
+  const ans  = btn.nextElementSibling;
+  const open = ans.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q.open').forEach(q => q.classList.remove('open'));
+  if (!open) { ans.classList.add('open'); btn.classList.add('open'); }
+}
+
+/* =====================================================================
+   NEWSLETTER
+   ===================================================================== */
+function subscribe() {
+  const v = document.getElementById('nlEmail').value;
+  if (v.includes('@')) {
+    showToast('Welcome to the MelodyMarket community!');
+    document.getElementById('nlEmail').value = '';
+  } else {
+    showToast('Please enter a valid email address.', 'error');
+  }
+}
+
+/* =====================================================================
+   SCROLL REVEAL ANIMATION
+   ===================================================================== */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: .1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* =====================================================================
+   ACTIVE NAV LINK ON SCROLL
+   ===================================================================== */
+window.addEventListener('scroll', () => {
+  let cur = '';
+  document.querySelectorAll('section[id]').forEach(s => {
+    if (scrollY >= s.offsetTop - 120) cur = s.id;
+  });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--white)' : '';
+  });
+});
+
+// Initialize cart UI on page load (empty state)
+updateCartUI();
+</script>
+</body>
+</html>
