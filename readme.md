@@ -1,10 +1,10 @@
-# 🎸 MelodyMarket — Premium Musical Instruments Store
+#  MelodyMarket — Premium Musical Instruments Store
 
 A fully functional full-stack e-commerce landing page built for a 
 premium musical instruments brand. Designed with a dark luxury 
 aesthetic and powered by Firebase Firestore as the backend database.
 
-## 🌐 Live Demo
+##  Live Demo
 [your-link-here]
 
 ## ✨ Features
@@ -48,7 +48,7 @@ melodymarket/
 - `contact_enquiries` — Stores name, email, subject, 
    message, and timestamp
 
-## 🚀 Getting Started
+##  Getting Started
 
 1. Clone the repository
 2. Create a Firebase project at console.firebase.google.com
@@ -56,13 +56,13 @@ melodymarket/
 4. Paste your firebaseConfig into index.html and admin.html
 5. Open index.html in your browser
 
-## 🔐 Admin Access
+##  Admin Access
 
 Navigate to admin.html and enter the admin password 
 to view all orders and enquiries.
 
-## 📸 Screenshots
+##  Screenshots
 [Add your screenshots here]
 
-## 👨‍💻 Author
+##  Author
 Built by [Your Name]
