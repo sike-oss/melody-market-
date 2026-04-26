@@ -7,11 +7,11 @@ aesthetic and powered by Firebase Firestore as the backend database.
 ##  Live Demo
 [your-link-here]
 
-## ✨ Features
+## Features
 
-- 🛒 **Shopping Cart** — Slide-out cart drawer with quantity 
+-  **Shopping Cart** — Slide-out cart drawer with quantity 
   controls and live price calculation
-- 💳 **Checkout System** — Customer detail form that saves 
+-  **Checkout System** — Customer detail form that saves 
   orders to Firestore with full item breakdown
 - 📬 **Contact Form** — Functional enquiry form that stores 
   messages in Firestore with timestamps
