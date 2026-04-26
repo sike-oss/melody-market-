@@ -13,17 +13,17 @@ aesthetic and powered by Firebase Firestore as the backend database.
   controls and live price calculation
 -  **Checkout System** — Customer detail form that saves 
   orders to Firestore with full item breakdown
-- 📬 **Contact Form** — Functional enquiry form that stores 
+-  **Contact Form** — Functional enquiry form that stores 
   messages in Firestore with timestamps
-- 🔐 **Admin Panel** — Password-protected dashboard to view 
+-  **Admin Panel** — Password-protected dashboard to view 
   all orders and customer enquiries in real time
-- 🎨 **Premium UI** — Dark theme with red accents, smooth 
+-  **Premium UI** — Dark theme with red accents, smooth 
   animations, custom cursor, scroll reveals, and mobile 
   responsive design
-- ⚡ **No Backend Server** — Entirely serverless using 
+-  **No Backend Server** — Entirely serverless using 
   Firebase Firestore as the database
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Technology | Usage |
 |------------|-------|
@@ -41,7 +41,7 @@ melodymarket/
 ├── admin.html        # Admin panel (password protected)
 └── SETUP_GUIDE.md    # Firebase setup instructions
 
-## 🗄️ Database Collections
+##  Database Collections
 
 - `orders` — Stores customer details, purchased items 
    array, total amount, and timestamp
