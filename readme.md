@@ -5,7 +5,7 @@ premium musical instruments brand. Designed with a dark luxury
 aesthetic and powered by Firebase Firestore as the backend database.
 
 ##  Live Demo
-[your-link-here]
+https://melody-store.netlify.app/?fbclid=PAVERFWARcdBhleHRuA2FlbQIxMABzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAacZzzcAKzAazcH3Gz4U8SCxNgG67kM1P0cZ2vQIBCUmMI-tdXjH_nXRlXHiFg_aem_6C2YuVM17oQ940eXfE6hqw
 
 ## Features
 
@@ -62,7 +62,7 @@ Navigate to admin.html and enter the admin password
 to view all orders and enquiries.
 
 ##  Screenshots
-[Add your screenshots here]
+
 
 ##  Author
-Built by [Your Name]
+Built by Imran Munge 
